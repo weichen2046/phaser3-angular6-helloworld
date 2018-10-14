@@ -6,6 +6,8 @@ import { Component, AfterViewInit } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements AfterViewInit {
+  private static readonly SCENE_KEY = 'main';
+
   title = 'angular-phaser';
 
   game: Phaser.Game;
@@ -21,8 +23,9 @@ export class AppComponent implements AfterViewInit {
       }
     },
     scene: {
+      key: AppComponent.SCENE_KEY,
       preload: this.preload,
-      create: this.create
+      create: this.create,
     },
     parent: 'content',
   };
@@ -32,7 +35,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   private preload() {
-    const scene = this.game.scene.getAt(0);
+    const scene = this.game.scene.getScene(AppComponent.SCENE_KEY);
     scene.load.setBaseURL('http://labs.phaser.io');
     scene.load.image('sky', 'assets/skies/space3.png');
     scene.load.image('logo', 'assets/sprites/phaser3-logo.png');
@@ -40,7 +43,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   private create() {
-    const scene = this.game.scene.getAt(0);
+    const scene = this.game.scene.getScene(AppComponent.SCENE_KEY);
     scene.add.image(400, 300, 'sky');
 
     const particles = scene.add.particles('red');
