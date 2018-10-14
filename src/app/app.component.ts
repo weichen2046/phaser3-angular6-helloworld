@@ -6,11 +6,7 @@ import { Component, AfterViewInit } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements AfterViewInit {
-  private static readonly SCENE_KEY = 'main';
-
   title = 'angular-phaser';
-
-  game: Phaser.Game;
 
   public readonly gameConfig: GameConfig = {
     type: Phaser.AUTO,
@@ -19,11 +15,11 @@ export class AppComponent implements AfterViewInit {
     physics: {
       default: 'arcade',
       arcade: {
-        gravity: { y: 200 }
+        gravity: { y: 200 },
+        debug: false,
       }
     },
     scene: {
-      key: AppComponent.SCENE_KEY,
       preload: this.preload,
       create: this.create,
     },
@@ -31,19 +27,26 @@ export class AppComponent implements AfterViewInit {
   };
 
   ngAfterViewInit() {
-    this.game = new Phaser.Game(this.gameConfig);
+    const game = new Phaser.Game(this.gameConfig);
   }
 
+  /**
+   * `this` in this method is an instance of Phaser.Scene at runtime.
+   */
   private preload() {
-    const scene = this.game.scene.getScene(AppComponent.SCENE_KEY);
+    // Avoid compile error.
+    const scene = this as any as Phaser.Scene;
     scene.load.setBaseURL('http://labs.phaser.io');
     scene.load.image('sky', 'assets/skies/space3.png');
     scene.load.image('logo', 'assets/sprites/phaser3-logo.png');
     scene.load.image('red', 'assets/particles/red.png');
   }
 
+  /**
+   * `this` in this method is an instance of Phaser.Scene at runtime.
+   */
   private create() {
-    const scene = this.game.scene.getScene(AppComponent.SCENE_KEY);
+    const scene = this as any as Phaser.Scene;
     scene.add.image(400, 300, 'sky');
 
     const particles = scene.add.particles('red');
